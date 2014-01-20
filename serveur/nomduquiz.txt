@@ -1,0 +1,33 @@
+#
+Combien font 2+2-6+4-1?
+V
+1
+F
+12
+F
+34
+F
+40
+*****
+#
+Quelle est la bonne réponse?
+F
+Réponse1
+F
+Réponse2
+V
+Réponse3
+F
+Réponse4
+*****
+#
+hcoisj,lk?
+V
+VRAI
+F
+FAUX
+F
+FaUX
+F
+Faux
+*****
