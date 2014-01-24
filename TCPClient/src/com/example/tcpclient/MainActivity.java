@@ -2,8 +2,10 @@ package com.example.tcpclient;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -164,10 +166,11 @@ public class MainActivity extends Activity {
 			Socket socket;
 			try {
 		        //On se connecte au réseau voulu
-				InetAddress serverAddr = InetAddress.getByName("192.168.1.4");//adresse IP du serveur
-		        socket = new Socket(serverAddr, 4444);
-   		     	Toast.makeText(getApplicationContext(), "Connexion établie", Toast.LENGTH_LONG).show();
-
+				InetAddress serverAddr = InetAddress.getByName("192.168.1.4");	//adresse IP du serveur
+		        socket = new Socket(serverAddr, 4444);	// connexion
+		        
+		        Thread.sleep(2000);
+		        //----while
 		        //On crée un buffer qui va recevoir les données
 		        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		        // On lit les lignes et les ranges dans les boutons ou textView
@@ -182,12 +185,17 @@ public class MainActivity extends Activity {
 		        afficheQuestion.setText(question);
 		        // On met les boutons dans un ordre au hasard
 		        boutonOrdreHasard(reponse1string,reponse2string,reponse3string,reponse4string);        
+		        //----endWhile
+		        
 		        
 		        // On ferme la co
 		        socket.close(); 
 				} 
 			catch (UnknownHostException e) {e.printStackTrace();}
-			catch (IOException e2) {e2.printStackTrace();}
+			catch (IOException e2) {e2.printStackTrace();} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return null;
 
 		}
