@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Le dernier des Mohicans</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="instructions">Pour se connecter au jeu, il suffit de se connecter sous un login en tapant son username puis en appuyant sur se connecter au jeu. Après une attente des autres joueurs la partie commencera. Des question vous seront posées et 4 réponses vous seront proposées. Donnez votre réponse en appuyant sur le bouton qui correspond à la réponse avant que les 10 secondes ne prennent fin. Si vous répondez juste, vous pouvez continuer à jouer. sinon, vous êtes éliminés du jeu.</string>
+
+</resources>
