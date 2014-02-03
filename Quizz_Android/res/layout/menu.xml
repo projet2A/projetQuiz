@@ -5,5 +5,8 @@
 <item android:id="@+id/quitter" 
      android:title="Quitter"
      android:icon="@drawable/quitter" />
+
+<item android:id="@+id/pref" 
+     android:title="Gestion des préférences" />
      
 </menu>

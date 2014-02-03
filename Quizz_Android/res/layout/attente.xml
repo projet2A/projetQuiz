@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fond"
+    android:background="@drawable/fond_principal"
     android:orientation="vertical" >
 
     <TextView
@@ -13,8 +13,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="116dp"
         android:gravity="center_vertical|center_horizontal"
-        android:text="En attente"
-        android:textSize="20dp" />
+        android:textColor="@color/textColor"
+        android:text="@string/attente"
+        android:textSize="21dp" />
 
     <ProgressBar
         android:id="@+id/progress"

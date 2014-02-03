@@ -9,11 +9,18 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Typeface;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +32,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 
+
 public class question extends Activity {
 	
+	long elapsed = 11000;
+    final static long INTERVAL=1000;
+    final static long TIMEOUT=0;
 	
+    TextView ques;
+
 	TextView afficheQuestion;
+	TextView chro;
 	Button reponse1;
 	Button reponse2;
 	Button reponse3;
@@ -38,15 +52,19 @@ public class question extends Activity {
 	String reponse2string = "";
 	String reponse3string = "";
 	String repondu_juste = "0";
-
 	String reponse4string = "";
+	
+	public Socket socket;
+	
 	boolean commencer = false;
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.question);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
-	
+		Typeface custom_font = Typeface.createFromAsset(getAssets(),
+      	      "fonts/erasdust.ttf");
+		
 
 		reponse1 =(Button)findViewById(R.id.button1);
 		reponse2 =(Button)findViewById(R.id.button2);
@@ -54,8 +72,36 @@ public class question extends Activity {
 		reponse4 =(Button)findViewById(R.id.button4);
 
 		afficheQuestion =(TextView)findViewById(R.id.textView1);
+		ques =(TextView)findViewById(R.id.textView2);
+
+		chro =(TextView)findViewById(R.id.timer);
+
+        reponse1.setTypeface(custom_font);
+        reponse2.setTypeface(custom_font);
+        reponse3.setTypeface(custom_font);
+        reponse4.setTypeface(custom_font);
+        afficheQuestion.setTypeface(custom_font);
+        chro.setTypeface(custom_font);
+        ques.setTypeface(custom_font);
 
 		afficheQuestion.setText("");
+		chro.setText("");
+		
+		 TimerTask task=new TimerTask(){
+	            @Override
+	            public void run() {
+	            	elapsed-=INTERVAL;
+	                if(elapsed == TIMEOUT){
+	                    this.cancel();
+	                    displayText("FINI !");
+	                    return;
+	                }
+	                displayText(" " + elapsed / 1000 + " secondes");
+	            }
+	        };
+	        Timer timer = new Timer();
+	        timer.scheduleAtFixedRate(task, INTERVAL, INTERVAL);
+
 	
 		new recevoirQuestion().execute(); //Lance l'Asynctask TcpClientTask
 
@@ -236,6 +282,16 @@ public class question extends Activity {
 	            System.exit(0);
 	              return true;
 	        }
+	        if ((item.getItemId())== R.id.pref)
+	        {
+	        	
+	        	Intent intent = new Intent(question.this,
+
+	                    preference.class);
+
+	        		startActivity(intent);
+	              return true;
+	        }
 	        return false;}
 	    
 	    //Envoie au serveur si la réponse est juste ou non
@@ -245,12 +301,12 @@ public class question extends Activity {
 	    		
 	    		try
 	    		{//On se connecte au réseau voulu
-				InetAddress serverAddr = InetAddress.getByName("192.168.1.4");	//adresse IP du serveur
-		        Socket socket = new Socket(serverAddr, 4001);	// connexion
+				//InetAddress serverAddr = InetAddress.getByName("192.168.1.4");	//adresse IP du serveur
+		        //Socket socket = new Socket(serverAddr, 4444);	// connexion
 		    	BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			    out.write(repondu_juste);
 			    out.flush();
-			    socket.close();
+			    //socket.close();
 	    		}
 	    		catch (UnknownHostException e) {e.printStackTrace();}
 				catch (IOException e2) {e2.printStackTrace();}
@@ -269,15 +325,15 @@ public class question extends Activity {
 		    
 			protected Void doInBackground(Void... arg0) {
 				
-				 Socket socket;
+				
 				try {
 					
-					
+					Lancement lanc = (Lancement)getApplicationContext();
+			        socket = lanc.getSocket();
 			        //On se connecte au réseau voulu
-					InetAddress serverAddr = InetAddress.getByName("192.168.1.4");	//adresse IP du serveur
-			        socket = new Socket(serverAddr, 4000);	// connexion
+					//InetAddress serverAddr = InetAddress.getByName("192.168.1.4");	//adresse IP du serveur
+			        //socket = new Socket(serverAddr, 4000);	// connexion
 			        
-			        //----while
 			        //On crée un buffer qui va recevoir les données
 			        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			        // On lit les lignes et les ranges dans les boutons ou textView
@@ -295,7 +351,7 @@ public class question extends Activity {
 			        //----endWhile
 			        
 			        // On ferme la co
-			        socket.close(); 
+			        //socket.close(); 
 					} 
 				catch (UnknownHostException e) {e.printStackTrace();}
 				catch (IOException e2) {e2.printStackTrace();}
@@ -313,6 +369,13 @@ public class question extends Activity {
 		        		}
 			}
 	}
+		private void displayText(final String text){
+	        this.runOnUiThread(new Runnable(){
+	            @Override
+	            public void run() {
+	                chro.setText(text);
+	            }});
+	    }
 		// Met les boutons dans un ordre aléatoire
 		public void boutonOrdreHasard(String reponse1str,String reponse2str,String reponse3str,String reponse4str)
 		{

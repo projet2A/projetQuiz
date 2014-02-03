@@ -1,9 +1,10 @@
 package com.prjoet.quizz_android;
 
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -11,15 +12,20 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.app.Activity;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,9 +37,13 @@ import android.view.View.OnClickListener;
 
 public class MainActivity extends Activity {
 	
-	 Button btnvalider;
-	 Button btninstructions;
-	 EditText user;
+	ImageButton btnvalider;
+	ImageButton btnfacebook;
+	ImageButton btninstructions;
+	TextView log;
+	EditText user;
+	String data;
+	public Socket socket;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -43,12 +53,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),
+        	      "fonts/erasdust.ttf");
+        	      
+        log = (TextView)findViewById(R.id.login);
+
         user = (EditText)findViewById(R.id.username);
+        log.setTypeface(custom_font);
+        user.setTypeface(custom_font);
 
-        btninstructions = (Button)findViewById(R.id.btninstructions);
-
-        btnvalider = (Button)findViewById(R.id.valider);
+        
+        btninstructions = (ImageButton)findViewById(R.id.btninstructions);
+        btnfacebook = (ImageButton)findViewById(R.id.btnface);
+        btnvalider = (ImageButton)findViewById(R.id.valider);
      
+        Context lecontext = getBaseContext();
+        data = ReadSettings(lecontext);
+        user.setText(data);
         
         btnvalider.setOnClickListener(new OnClickListener()
         {public void onClick(View v) {
@@ -58,9 +80,8 @@ public class MainActivity extends Activity {
 				new TcpClientTask().execute(); //Lance l'Asynctask TcpClientTask
 			
      		Intent intent = new Intent(MainActivity.this,
-
+     				
                     attente.class);
-
         		startActivity(intent);}
 			else {Toast toast= Toast.makeText(MainActivity.this,("Veuillez rentrer un username correcte"),
 					Toast.LENGTH_LONG);
@@ -68,6 +89,15 @@ public class MainActivity extends Activity {
 			toast.setGravity(Gravity.CENTER, 0, 0);
 
 					toast.show();}
+        
+        }
+        });
+        
+        btnfacebook.setOnClickListener(new OnClickListener()
+        {public void onClick(View v) {
+        	Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/pages/Quiz-android-Le-dernier-des-Mohicans/1415966378649852?fref=ts"));
+
+			startActivity(intent);
         
         }
         });
@@ -91,19 +121,22 @@ public class MainActivity extends Activity {
 	    
 		protected Void doInBackground(Void... arg0) {
 			
-			Socket socket;
+			
 			try {
 				
+		        
 		        //On se connecte au réseau voulu
 				InetAddress serverAddr = InetAddress.getByName("192.168.1.4");	//adresse IP du serveur
 		        socket = new Socket(serverAddr, 4444);	// connexion
+		        
+				Lancement lanc = (Lancement)getApplicationContext();
+		        lanc.setSocket(socket);
 		        
 		        //On met dans le buffer l'username pour l'envoyer au serveur
 			    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 				String username = user.getText().toString();
 			    out.write(username);
-			    out.flush();
-		        
+			    out.flush();		        
 		        
 		        // On ferme la co
 		        socket.close(); 
@@ -123,9 +156,6 @@ public class MainActivity extends Activity {
 	    }
 	}
 		}
-	
-	
-	
     public boolean onCreateOptionsMenu(Menu menu) {
     	 
         //Création d'un MenuInflater qui va permettre d'instancier un Menu XML en un objet Menu
@@ -145,7 +175,34 @@ public class MainActivity extends Activity {
             System.exit(0);
               return true;
         }
+        if ((item.getItemId())== R.id.pref)
+        {
+        	
+        	Intent intent5 = new Intent(MainActivity.this,
+
+                    preference.class);
+
+        		startActivity(intent5);
+              return true;
+        }
         return false;}
+    
+    public String ReadSettings(Context context){ 
+		  String data ="";
+
+		try{
+		FileInputStream fIn = context.openFileInput("pref.txt");
+        DataInputStream in = new DataInputStream(fIn);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+      
+        String ligne = br.readLine();
+        data = ligne;
+        br.close();
+		}
+		catch (Exception e) {       
+			} 
+		return data; 
+       }
 }
 
 

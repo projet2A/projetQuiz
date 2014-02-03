@@ -2,47 +2,30 @@ package com.prjoet.quizz_android;
 
 
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-
-
-
-
-
-
-import com.prjoet.quizz_android.MainActivity.TcpClientTask;
-
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 import android.content.Intent;
-import android.view.Gravity;
+import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 
 public class attente extends Activity {
 	
 	ProgressBar myProgressBar; 
+	TextView att;
 	int myProgress = 0;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +36,10 @@ public class attente extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.attente);
         
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),
+      	      "fonts/Eraser.ttf");
+        att = (TextView)findViewById(R.id.enattente);
+        att.setTypeface(custom_font);
         myProgressBar=(ProgressBar)findViewById(R.id.progress);
 
 
@@ -81,7 +68,6 @@ public class attente extends Activity {
 				Intent intent = new Intent(attente.this,
 
 	                    question.class);
-
 	        		startActivity(intent);
 		        
 				} 
@@ -120,6 +106,16 @@ public class attente extends Activity {
               //Pour fermer l'application il suffit de faire finish()
         
             System.exit(0);
+              return true;
+        }
+        if ((item.getItemId())== R.id.pref)
+        {
+        	
+        	Intent intent = new Intent(attente.this,
+
+                    preference.class);
+
+        		startActivity(intent);
               return true;
         }
         return false;}

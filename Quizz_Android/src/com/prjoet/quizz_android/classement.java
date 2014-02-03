@@ -14,13 +14,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.TextView;
+
 
 public class classement extends Activity {
+
+	TextView classement;
 
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,10 @@ public class classement extends Activity {
         setContentView(R.layout.classement);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
-	
+		Typeface custom_font = Typeface.createFromAsset(getAssets(),
+      	      "fonts/erasdust.ttf");
+		classement = (TextView)findViewById(R.id.txtclassement);
+        classement.setTypeface(custom_font);
 		
 		new TcpClientTask().execute(); //Lance l'Asynctask TcpClientTask
 
@@ -46,7 +55,7 @@ public class classement extends Activity {
 			try {
 				
 
-				ss = new ServerSocket(4300);				
+				ss = new ServerSocket(6666);				
 				Socket socket = ss.accept();
 				
 		        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -88,6 +97,16 @@ public class classement extends Activity {
 	              //Pour fermer l'application il suffit de faire finish()
 	        	
 	            System.exit(0);
+	              return true;
+	        }
+	        if ((item.getItemId())== R.id.pref)
+	        {
+	        	
+	        	Intent intent = new Intent(classement.this,
+
+	                    preference.class);
+
+	        		startActivity(intent);
 	              return true;
 	        }
 	        return false;}
