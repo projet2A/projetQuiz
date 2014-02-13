@@ -17,8 +17,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,18 +54,22 @@ public class preference extends Activity {
         Typeface custom_font2 = Typeface.createFromAsset(getAssets(),
       	      "fonts/Eraser.ttf");
         	      
+      
         log = (TextView)findViewById(R.id.textView2);
         btnvalider = (Button)findViewById(R.id.valider);
         login = (EditText)findViewById(R.id.editText1);
+
         log.setTypeface(custom_font);
         login.setTypeface(custom_font);
         btnvalider.setTypeface(custom_font2);    
         
+             
         
         Context lecontext = getBaseContext();
         data = ReadSettings(lecontext);
         login.setText(data);
         
+            
         btnvalider.setOnClickListener(new OnClickListener()
         {public void onClick(View v) {
 			String user = login.getText().toString();
@@ -80,6 +87,8 @@ public class preference extends Activity {
         });
         
     }
+	
+
 	
     public boolean onCreateOptionsMenu(Menu menu) {
     	 

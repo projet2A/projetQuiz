@@ -2,8 +2,9 @@ package com.prjoet.quizz_android;
 
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -27,6 +28,9 @@ public class attente extends Activity {
 	ProgressBar myProgressBar; 
 	TextView att;
 	int myProgress = 0;
+	Socket socket;
+	String ligne= "";
+	BufferedReader in;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,7 @@ public class attente extends Activity {
         Typeface custom_font = Typeface.createFromAsset(getAssets(),
       	      "fonts/Eraser.ttf");
         att = (TextView)findViewById(R.id.enattente);
+
         att.setTypeface(custom_font);
         myProgressBar=(ProgressBar)findViewById(R.id.progress);
 
@@ -57,18 +62,30 @@ public class attente extends Activity {
 	    
 		protected Void doInBackground(Void... arg0) {
 			
-			ServerSocket ss;
 			try {
+				lancementApplication lanc = (lancementApplication)getApplicationContext();
+		        socket = lanc.getSocket();
+			    in = lanc.getBufferedReader();
+        		ligne=in.readLine();
+        		while ((!(ligne.equals("start"))) && (!(ligne.equals("stop"))))
+		        	{
+						ligne=in.readLine();
+		        	}
+        		if (ligne.equals("start"))
+        		{
+        			Intent intent = new Intent(attente.this,
+
+    	                    question.class);
+    	        		startActivity(intent);
+        		}
+        		if (ligne.equals("stop"))
+        		{
+        			Intent intent = new Intent(attente.this,
+
+    	                    classement.class);
+    	        		startActivity(intent);
+        		}
 				
-
-				ss = new ServerSocket(5555);				
-				Socket socket = ss.accept();
-				socket.close();
-				ss.close();
-				Intent intent = new Intent(attente.this,
-
-	                    question.class);
-	        		startActivity(intent);
 		        
 				} 
 			catch (UnknownHostException e) {e.printStackTrace();}

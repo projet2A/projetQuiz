@@ -27,6 +27,7 @@ import android.widget.TextView;
 public class classement extends Activity {
 
 	TextView classement;
+	BufferedReader in;
 
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +52,9 @@ public class classement extends Activity {
 	    
 		protected Void doInBackground(Void... arg0) {
 			
-			ServerSocket ss;
-			try {
-				
-
-				ss = new ServerSocket(6666);				
-				Socket socket = ss.accept();
-				
-		        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-				socket.close();
-				ss.close();
-		        
-				} 
-			catch (UnknownHostException e) {e.printStackTrace();}
-			catch (IOException e2) {e2.printStackTrace();}
+			lancementApplication lanc = (lancementApplication)getApplicationContext();
+			in = lanc.getBufferedReader();
+			
 			return null;
 
 		}

@@ -4,17 +4,18 @@
     android:versionCode="1"
     android:versionName="1.0" >
         <uses-permission android:name="android.permission.INTERNET"/>
-    
-    
+        <uses-permission android:name="android.permission.CAMERA"></uses-permission>
+		<uses-feature android:name="android.hardware.camera"/>
+		<uses-feature android:name="android.hardware.camera.autofocus"/>
+	    
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
-    
-
+   
     <application
         
-        android:name="com.prjoet.quizz_android.Lancement"
+        android:name="com.prjoet.quizz_android.lancementApplication"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"

@@ -6,19 +6,16 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text=""
-        android:textSize="17dp" />
+        android:layout_height="wrap_content"
+        android:layout_weight="0.29"
+        android:text="" />
 
     <TextView
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/username"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_vertical"
         android:layout_weight="0.07"
         android:gravity="center_horizontal"
         android:text="@string/nom"
@@ -30,36 +27,24 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="49dp"
-        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:ems="10"
         android:gravity="center_horizontal"
         android:inputType="textPersonName"
         android:textColor="@color/textColor"
         android:textSize="20dp"
-        android:textStyle="italic" >
-
-        <requestFocus />
-    </EditText>
+        android:textStyle="italic" />
 
     <ImageButton
         android:id="@+id/valider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-        android:layout_weight="0.47"
-        
+        android:layout_weight="0.39"
         android:background="@android:color/transparent"
-        android:src="@drawable/jouer" 
-        />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.61"
-        android:text="" />
+        android:src="@drawable/jouer" />
 
     <ImageButton
         android:id="@+id/btninstructions"

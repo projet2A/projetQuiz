@@ -17,14 +17,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.app.Activity;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.Menu;
@@ -37,6 +38,7 @@ import android.view.View.OnClickListener;
 
 public class MainActivity extends Activity {
 	
+	
 	ImageButton btnvalider;
 	ImageButton btnfacebook;
 	ImageButton btninstructions;
@@ -48,12 +50,8 @@ public class MainActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-   
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
-        
+       
         Typeface custom_font = Typeface.createFromAsset(getAssets(),
         	      "fonts/erasdust.ttf");
         	      
@@ -72,6 +70,10 @@ public class MainActivity extends Activity {
         data = ReadSettings(lecontext);
         user.setText(data);
         
+
+        
+        
+        
         btnvalider.setOnClickListener(new OnClickListener()
         {public void onClick(View v) {
 			String username = user.getText().toString();
@@ -79,6 +81,7 @@ public class MainActivity extends Activity {
 			{		
 				new TcpClientTask().execute(); //Lance l'Asynctask TcpClientTask
 			
+				
      		Intent intent = new Intent(MainActivity.this,
      				
                     attente.class);
@@ -124,22 +127,30 @@ public class MainActivity extends Activity {
 			
 			try {
 				
-		        
 		        //On se connecte au réseau voulu
 				InetAddress serverAddr = InetAddress.getByName("192.168.1.4");	//adresse IP du serveur
 		        socket = new Socket(serverAddr, 4444);	// connexion
 		        
-				Lancement lanc = (Lancement)getApplicationContext();
+				lancementApplication lanc = (lancementApplication)getApplicationContext();
 		        lanc.setSocket(socket);
 		        
 		        //On met dans le buffer l'username pour l'envoyer au serveur
-			    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-				String username = user.getText().toString();
+			    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
+		        lanc.setBufferedWriter(out);
+
+
+        		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF8"));
+			    lanc.setBufferedReader(in);
+			    
+			    lanc.setNumberQuestion(1);
+
+			    
+			    String username = user.getText().toString() +"\n";
 			    out.write(username);
-			    out.flush();		        
-		        
+			    out.flush();
+			    			    	        
 		        // On ferme la co
-		        socket.close(); 
+		        // socket.close(); 
 				} 
 			catch (UnknownHostException e) {e.printStackTrace();}
 			catch (IOException e2) {e2.printStackTrace();}
@@ -156,6 +167,9 @@ public class MainActivity extends Activity {
 	    }
 	}
 		}
+	
+
+	
     public boolean onCreateOptionsMenu(Menu menu) {
     	 
         //Création d'un MenuInflater qui va permettre d'instancier un Menu XML en un objet Menu
@@ -194,7 +208,6 @@ public class MainActivity extends Activity {
 		FileInputStream fIn = context.openFileInput("pref.txt");
         DataInputStream in = new DataInputStream(fIn);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-      
         String ligne = br.readLine();
         data = ligne;
         br.close();
